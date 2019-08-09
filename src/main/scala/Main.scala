@@ -1,6 +1,7 @@
 object Main extends App {
 
-  sealed abstract class Or[A, B] extends Product with Serializable {
+
+  sealed abstract class Or[A , B] extends Product with Serializable {
     self =>
 
     def isEmpty: Boolean
@@ -22,11 +23,14 @@ object Main extends App {
   }
 
 
+  /*******************************
+    * Campanion object
+    */
   object Or {
 
-    def apply[A, B](a: A, b: B): Any = if (a == null) second(b) else first(a)
+    def apply[A , B](a: A , b: B): Any = if (a == null) second(b) else first(a)
 
-    def empty[A, B] = ??? //new Or[A, B](NoneValue, NoneValue)
+    def empty[A , B] = ??? //new Or[A, B](NoneValue, NoneValue)
 
     def first[A](value:A) = new First[A](value)
 
@@ -35,28 +39,41 @@ object Main extends App {
   }
 
 
-  /*object First {
-    def apply[T](value:T) = Or.first(value)
-    //def unapply[T](value:Or[T]) = if(value.isDefined) scala.Some(value.get) else scala.None
+  /*******************************
+    * Campanion object
+    */
+  object First {
+    def apply[A](value:A) = Or.first(value)
+    //def unapply[A](value:Or[A,_]) = ???
   }
 
 
+  /*******************************
+    * Campanion object
+    */
   object Second {
-    def apply[T](value:T) = Or.second(value)
-    //def unapply[T](value:Or[T]) = if(value.isDefined) scala.Some(value.get) else scala.None
-  }*/
+    def apply[A](value:A) = Or.second(value)
+    //def unapply[A](value:Or[_,A]) = ???
+  }
 
 
-  trait Bifunctor[F[_, _]] extends Serializable{ self =>
+  /*******************************
+    * Trait BiFunctor
+    */
+  trait Bifunctor[F[_ , _]] extends Serializable{ self =>
 
-    def bimap[A, B, C, D](fab: F[A, B])(f: A => C, g: B => D): F[C, D]
+    def bimap[A, B, C, D](fab: F[A , B])(f: A => C , g: B => D): F[C , D]
 
   }
 
+
+  /*******************************
+    * REVOIR CETTE FONCTION ==> Dicuter avec prof
+    */
 
   def convertToInt(str: String): Or[String,Int] = str match {
-      case _  => First[String](str)
-      case _ => Second[Int]
+      case _  => First(str)
+      case _ => Second(str.)
   }
 
 

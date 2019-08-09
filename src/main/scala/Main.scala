@@ -10,7 +10,7 @@ object Main extends App {
 
 
   final case class First[A](value: A) extends Or[A,_] {
-    def get: Class[_ <: A] = value.getClass // retourner le type des éléments de la classe
+    def get: Class[_ <: A] = value.getClass // retourner le type des éléments de la classe ??? Demander plus d'explications
 
     override def isEmpty: Boolean = false
   }
@@ -72,8 +72,8 @@ object Main extends App {
     */
 
   def convertToInt(str: String): Or[String,Int] = str match {
-      case _  => First(str)
-      case _ => Second(str.)
+      case _  if(str.toInt) => Second(str)
+      case _ => First(str)
   }
 
 

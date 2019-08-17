@@ -1,25 +1,25 @@
 object Main extends App {
 
 
-  sealed abstract class Or[A , B] extends Product with Serializable {
+  sealed abstract class Or[A , B] {
     self =>
 
-    def isEmpty: Boolean
+    //def isEmpty: Boolean
 
   }
 
 
-  final case class First[A](value: A) extends Or[A,_] {
-    def get: Class[_ <: A] = value.getClass // retourner le type des éléments de la classe ??? Demander plus d'explications
+  final case class First[A](value: A) extends Or[A , Nothing] {
+    //def get: Class[_ <: A] = value.getClass // retourner le type des éléments de la classe ??? Demander plus d'explications
 
-    override def isEmpty: Boolean = false
+    //override def isEmpty: Boolean = false
   }
 
 
-  final case class Second[A](value: A) extends Or[_,A] {
-    def get: Class[_ <: A] = value.getClass
+  final case class Second[B](value: B) extends Or[Nothing , B] {
+    //def get: Class[_ <: B] = value.getClass
 
-    override def isEmpty: Boolean = false
+    //override def isEmpty: Boolean = false
   }
 
 
@@ -30,7 +30,7 @@ object Main extends App {
 
     def apply[A , B](a: A , b: B): Any = if (a == null) second(b) else first(a)
 
-    def empty[A , B] = ??? //new Or[A, B](NoneValue, NoneValue)
+    //def empty[A , B] = ??? //new Or[A, B](NoneValue, NoneValue)
 
     def first[A](value:A) = new First[A](value)
 
@@ -52,7 +52,7 @@ object Main extends App {
     * Campanion object
     */
   object Second {
-    def apply[A](value:A) = Or.second(value)
+    def apply[B](value:B) = Or.second(value)
     //def unapply[A](value:Or[_,A]) = ???
   }
 
@@ -60,10 +60,15 @@ object Main extends App {
   /*******************************
     * Trait BiFunctor
     */
-  trait Bifunctor[F[_ , _]] extends Serializable{ self =>
+  trait Bifunctor[F[_ , _]] {//extends Serializable{ self =>
 
-    def bimap[A, B, C, D](fab: F[A , B])(f: A => C , g: B => D): F[C , D]
+    //def bimap[A, B, C, D](fab: F[A , B])(f: A => C , g: B => D): F[C , D]
+    def bimap[A, B, C, D](fa: F[A,B])(f: (A,B) => (C,D)): F[C,D]
 
+  }
+
+  trait Functor[F[_]] {
+    def map[A, B](fa: F[A])(f: A => B): F[B]
   }
 
 

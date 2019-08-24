@@ -58,7 +58,7 @@ object Main extends App {
 
   object Bifunctor {
     implicit val orBifunctor: Bifunctor[Or] = new Bifunctor[Or] {
-      def bimap[A, B, C, D](x: Or[A, B])(f: A => C , g: B => D) = new Or[C,D](f(x),g(x))
+      def bimap[A, B, C, D](x: Or[A, B])(f: A => C , g: B => D)= Or(f(x),g(x))
     }
   }
 
@@ -69,7 +69,6 @@ object Main extends App {
     */
 
   def convertToInt(str: String): Or[Int, String] = str match {
-    case Nil => Or[]
     case _ if(str.toInt) => First(str.toInt)
     case _ => Second(str)
   }

@@ -58,7 +58,10 @@ object Main extends App {
 
   object Bifunctor {
     implicit val orBifunctor: Bifunctor[Or] = new Bifunctor[Or] {
-      def bimap[A, B, C, D](x: Or[A, B])(f: A => C , g: B => D)= Or(f(x),g(x))
+      def bimap[A, B, C, D](x: Or[A, B])(f: A => C , g: B => D)= x match {
+        case First(a) => First(f(a))
+        case Second(b) => Second(g(b))
+      }
     }
   }
 

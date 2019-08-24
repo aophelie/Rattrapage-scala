@@ -1,7 +1,7 @@
 object Main extends App {
 
 
-  sealed abstract class Or[A , B] {
+  sealed abstract class Or[+A , +B] {
 
   }
 
@@ -21,7 +21,7 @@ object Main extends App {
     */
   object Or {
 
-    def apply[A , B](a: A , b: B) = if (a.isInstanceOf) first(a) else second(b)
+    //def apply[A , B](a: A , b: B) = if (a.isInstanceOf) first(a) else second(b)
 
     def first[A](value:A): Or[A , Nothing] = new First[A](value)
 
@@ -51,14 +51,14 @@ object Main extends App {
     */
   trait Bifunctor[F[_ , _]] {
 
-    def bimap[A, B, C, D](fa: F[A,B])(f: A => C , g: B => D): F[C,D]
+    def bimap[A, B, C, D](fab: F[A,B])(f: A => C , g: B => D): F[C,D]
 
   }
 
 
   object Bifunctor {
     implicit val orBifunctor: Bifunctor[Or] = new Bifunctor[Or] {
-      def bimap(x: Or[String,Int], { x:String => x.length }, { x:Int => x+1 }) =
+      def bimap[A, B, C, D](x: Or[A, B])(f: A => C , g: B => D) = new Or[C,D](f(x),g(x))
     }
   }
 
@@ -69,7 +69,7 @@ object Main extends App {
     */
 
   def convertToInt(str: String): Or[Int, String] = str match {
-    case Nil =>
+    case Nil => Or[]
     case _ if(str.toInt) => First(str.toInt)
     case _ => Second(str)
   }

@@ -89,10 +89,12 @@ object Main extends App {
 
   import scala.util.Try
 
-  def convertToInt(str: String): Or[Int, String] = str match {
+   def convertToInt(str: String): Unit ={
+    Try(str.toInt).toOption.map(First.apply).getOrElse(Second(str))
+  }
+
+  def convertToIntBis(str: String): Or[Int, String] = str match {
     case _ if Try(str.toInt).isSuccess => First(str.toInt)
     case _ => Second(str)
   }
-
-
 }

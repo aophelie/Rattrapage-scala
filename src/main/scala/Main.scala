@@ -1,3 +1,4 @@
+import Main.Or
 
 object Main extends App {
 
@@ -28,8 +29,14 @@ object Main extends App {
 
     def second[B](value:B): Or[Nothing , B] = new Second[B](value)
 
-    def bimap[A, B, C, D](f: A => C , g: B => D): Or[C, D] = Bifunctor.orBifunctor.bimap(Or.this )(f,g)
+    //def bimap[A, B, C, D](f: A => C , g: B => D): Or[C, D] = Bifunctor.orBifunctor.bimap(Or.this )(f,g)
 
+  }
+
+  object Implicits {
+    implicit class OrBimap[Or](val x: Or[A,B] ) extends AnyVal {
+      def Bimap[A, B, C, D](f: A => C , g: B => D) = Bifunctor.orBifunctor.bimap(x)(f,g)
+    }
   }
 
 
@@ -69,7 +76,6 @@ object Main extends App {
   }
 
 
-  def bimap[A, B, C, D](f: A => C , g: B => D): Or[C, D] = Bifunctor.orBifunctor.bimap(this)(f,g)
 
 
   /*******************************

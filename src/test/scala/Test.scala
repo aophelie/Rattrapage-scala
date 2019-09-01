@@ -12,4 +12,5 @@ class Test extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
     intString should contain(1)
   }
 
+
 }

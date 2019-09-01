@@ -1,4 +1,4 @@
-import Main.Or
+
 
 object Main extends App {
 
@@ -23,20 +23,10 @@ object Main extends App {
     */
   object Or {
 
-    //def apply[A , B](a: A , b: B) = if (a.isInstanceOf) first(a) else second(b)
-
     def first[A](value:A): Or[A , Nothing] = new First[A](value)
 
     def second[B](value:B): Or[Nothing , B] = new Second[B](value)
 
-    //def bimap[A, B, C, D](f: A => C , g: B => D): Or[C, D] = Bifunctor.orBifunctor.bimap(Or.this )(f,g)
-
-  }
-
-  object Implicits {
-    implicit class OrBimap[Or](val x: Or[A,B] ) extends AnyVal {
-      def Bimap[A, B, C, D](f: A => C , g: B => D) = Bifunctor.orBifunctor.bimap(x)(f,g)
-    }
   }
 
 
@@ -67,12 +57,27 @@ object Main extends App {
 
 
   object Bifunctor {
-    implicit val orBifunctor: Bifunctor[Or] = new Bifunctor[Or] {
+    implicit val OrBifunctor: Bifunctor[Or] = new Bifunctor[Or] {
       def bimap[A, B, C, D](x: Or[A, B])(f: A => C , g: B => D)= x match {
         case First(a) => First(f(a))
         case Second(b) => Second(g(b))
       }
     }
+  }
+
+
+  object Implicits {
+
+    implicit class OrPlus[A, B](x: Or[A, B]) {
+      def bimap[A, B, C, D](f: A => C)(g: B => D) = Bifunctor.OrBifunctor.bimap(x)(f,g)
+    }
+
+    /*implicit class BiMap[F[_, _], A, B](inner: F[A, B]) {
+      def bimap[A, B, C, D](fac: A => C)(fbd: B => D) = {
+        implicitly[Bifunctor[F]].bimap(inner)(fac)(fbd)
+      }
+    }*/
+
   }
 
 
@@ -82,8 +87,10 @@ object Main extends App {
     * REVOIR CETTE FONCTION ==> Dicuter avec prof
     */
 
+  import scala.util.Try
+
   def convertToInt(str: String): Or[Int, String] = str match {
-    case _ if(str.toInt) => First(str.toInt)
+    case _ if Try(str.toInt).isSuccess => First(str.toInt)
     case _ => Second(str)
   }
 
